@@ -315,6 +315,16 @@ void Skywatcher::Init()
     SetST4RAGuideRate('2');
     SetST4DEGuideRate('2');
     LOGF_WARN("%s() : Setting both ST4 guide rates to  0.5x (2)", __FUNCTION__);
+    if (HasSnapPort1())
+    {
+        TurnSnapPort1(false);
+        LOGF_DEBUG("%s() : Resetting snap port 1", __FUNCTION__);
+    }
+    if (HasSnapPort2())
+    {
+        TurnSnapPort2(false);
+        LOGF_DEBUG("%s() : Resetting snap port 2", __FUNCTION__);
+    }
 
     //Park status
     if (telescope->InitPark() == false)
@@ -530,6 +540,16 @@ bool Skywatcher::HasAuxEncoders()
 bool Skywatcher::HasPPEC()
 {
     return (AxisFeatures[Axis1].hasPPEC) && (AxisFeatures[Axis2].hasPPEC);
+}
+
+bool Skywatcher::HasSnapPort1()
+{
+    return MountCode == 0x04 ||  MountCode == 0x05 ||  MountCode == 0x06;
+}
+
+bool Skywatcher::HasSnapPort2()
+{
+    return MountCode == 0x06;
 }
 
 void Skywatcher::InquireRAEncoderInfo(INumberVectorProperty *encoderNP)
@@ -1278,6 +1298,39 @@ void Skywatcher::GetRAPPECStatus(bool *intraining, bool *inppec)
 void Skywatcher::GetDEPPECStatus(bool *intraining, bool *inppec)
 {
     return GetPPECStatus(Axis2, intraining, inppec);
+}
+
+void Skywatcher::TurnSnapPort(SkywatcherAxis axis, bool on)
+{
+    char snapcmd[2]="0";
+    if (on)
+        snapcmd[0]='1';
+    else
+        snapcmd[0]='0';
+    snapportstatus[axis] = on;
+    DEBUGF(DBG_MOUNT, "%s() : Axis = %c -- snap=%c", __FUNCTION__, AxisCmd[axis], snapcmd);
+    dispatch_command(SetSnapPort, axis, snapcmd);
+    read_eqmod();
+}
+
+void Skywatcher::TurnSnapPort1(bool on)
+{
+    TurnSnapPort(Axis1, on);
+}
+
+void Skywatcher::TurnSnapPort2(bool on)
+{
+    TurnSnapPort(Axis2, on);
+}
+
+bool Skywatcher::GetSnapPort1Status()
+{
+    return snapportstatus[Axis1];
+}
+
+bool Skywatcher::GetSnapPort2Status()
+{
+    return snapportstatus[Axis2];
 }
 
 void Skywatcher::SetAxisPosition(SkywatcherAxis axis, uint32_t step)

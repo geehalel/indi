@@ -133,6 +133,8 @@ class EQMod : public INDI::Telescope, public INDI::GuiderInterface
     ISwitchVectorProperty *DEPPECTrainingSP = NULL;
     ISwitchVectorProperty *RAPPECSP         = NULL;
     ISwitchVectorProperty *DEPPECSP         = NULL;
+    ISwitchVectorProperty *SNAPPORT1SP      = NULL;
+    ISwitchVectorProperty *SNAPPORT2SP      = NULL;
 
     INumber *MinPulseN                   = NULL;
     INumber *MinPulseTimerN              = NULL;
