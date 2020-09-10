@@ -1784,6 +1784,8 @@ void SkywatcherAPIMount::UpdateDetailedMountInformation(bool InformClient)
     if (BasicMountInfoHasChanged && InformClient)
         IDSetText(&BasicMountInfoV, nullptr);
 
+    if (MountCode == 5 || MountCode == 6)
+        IUSaveText(&BasicMountInfo[MOUNT_NAME], "AZEQ5/6 Goto");
     if (MountCode >= 128 && MountCode <= 143)
         IUSaveText(&BasicMountInfo[MOUNT_NAME], "Az Goto");
     if (MountCode >= 144 && MountCode <= 159)

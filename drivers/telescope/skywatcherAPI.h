@@ -82,6 +82,10 @@ class SkywatcherAPI
         /// \return True if the current mount is AZ GTi otherwise false.
         bool IsAZGTiMount() const;
 
+        /// \brief Check if the current mount is AZEQ mount
+        /// \return True if the current mount is AZ-EQ5 or AZ-EQ6 otherwise false.
+        bool IsAZEQMount() const;
+
         /// \brief Convert a slewing rate in degrees per second into the required
         /// clock ticks per microstep setting.
         /// \param[in] Axis - The axis to use.

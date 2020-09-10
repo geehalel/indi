@@ -133,7 +133,7 @@ bool SkywatcherAPI::CheckIfDCMotor()
         IsDCMotor = true;
         return true;
     }
-    if (TTY_TIME_OUT == rc)
+    if ((TTY_TIME_OUT == rc) or ((2 == nbytes) && ('!' == input[0]) && '1' == input[1]))
     {
         IsDCMotor = false;
         return true;
@@ -150,6 +150,11 @@ bool SkywatcherAPI::IsVirtuosoMount() const
 bool SkywatcherAPI::IsAZGTiMount() const
 {
     return MountCode == 0xA5;
+}
+
+bool SkywatcherAPI::IsAZEQMount() const
+{
+    return MountCode == 0x05 || MountCode == 0x06;
 }
 
 bool SkywatcherAPI::IsMerlinMount() const
@@ -365,8 +370,8 @@ bool SkywatcherAPI::InitMount(bool recover)
 
     MountCode = MCVersion & 0xFF;
 
-    // Disable EQ mounts
-    if (MountCode < 0x80)
+    // Disable EQ mounts but AZEQ
+    if ((MountCode < 0x80)  && !IsAZEQMount())
         return false;
 
     //// NOTE: Simulator settings, Mount dependent Settings
