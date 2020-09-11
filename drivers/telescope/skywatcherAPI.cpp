@@ -133,7 +133,8 @@ bool SkywatcherAPI::CheckIfDCMotor()
         IsDCMotor = true;
         return true;
     }
-    if ((TTY_TIME_OUT == rc) or ((2 == nbytes) && ('!' == input[0]) && '1' == input[1]))
+    // AZEQ5 replies error code '!1', AZEQ6 replies error code '!0'
+    if ((TTY_TIME_OUT == rc) || ((2 == nbytes) && ('!' == input[0]) && (('0' == input[1]) || ('1' == input[1]))))
     {
         IsDCMotor = false;
         return true;
